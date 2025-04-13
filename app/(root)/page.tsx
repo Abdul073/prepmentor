@@ -9,7 +9,7 @@ import {
   GetLatestInterview,
 } from "@/lib/action/general.action";
 
-const Page = async () => {
+const Home = async () => {
   const user = await getCurrentUser();
 
   const [userInterviews, latestInterviews] = await Promise.all([
@@ -17,8 +17,8 @@ const Page = async () => {
     await GetLatestInterview({ userId: user?.id! }),
   ]);
 
-  const hasPastInterview = userInterviews?.length > 0;
-  const hasUpcomingInterviews = latestInterviews?.length > 0;
+  const hasPastInterview = userInterviews?.length! > 0;
+  const hasUpcomingInterviews = latestInterviews?.length! > 0;
 
   return (
     <>
@@ -48,7 +48,15 @@ const Page = async () => {
         <div className="inteviews-section">
           {hasPastInterview ? (
             userInterviews?.map((interview) => (
-              <InterviewCard {...interview} key={interview.id} />
+              <InterviewCard
+                {...interview}
+                key={interview.id}
+                userId={user?.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
             ))
           ) : (
             <p>You haven't taken any interviews yet</p>
@@ -61,7 +69,15 @@ const Page = async () => {
         <div className="interviews-section">
           {hasUpcomingInterviews ? (
             latestInterviews?.map((interview) => (
-              <InterviewCard {...interview} key={interview.id} />
+              <InterviewCard
+                {...interview}
+                key={interview.id}
+                userId={user?.id}
+                role={interview.role}
+                type={interview.type}
+                techstack={interview.techstack}
+                createdAt={interview.createdAt}
+              />
             ))
           ) : (
             <p>There are no new interview available</p>
@@ -71,4 +87,4 @@ const Page = async () => {
     </>
   );
 };
-export default Page;
+export default Home;

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import Image from "next/image";
-import { getRandomInterviewCover } from "@/lib/utils";
+import { cn, getRandomInterviewCover } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
@@ -18,6 +18,14 @@ const InterviewCard = async ({
       ? await getFeedbackByInterviewById({ interviewId: id, userId })
       : null;
   const normalizeTyoe = /mix/gi.test(type) ? "Mixed" : type;
+
+  const badgeColor =
+    {
+      Behavioral: "bg-light-400",
+      Mixed: "bg-light-600",
+      Technical: "bg-light-800",
+    }[normalizeTyoe] || "bg-light-600";
+
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
   ).format("MMM D, YYYY");
@@ -26,7 +34,12 @@ const InterviewCard = async ({
     <div className="card-border w-[360px] max-sm:w-full min-h-96">
       <div className="card-interview">
         <div>
-          <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-light-600">
+          <div
+            className={cn(
+              "absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-light-600",
+              badgeColor
+            )}
+          >
             <p className="badge-text">{normalizeTyoe}</p>
           </div>
           <Image
@@ -49,7 +62,7 @@ const InterviewCard = async ({
             </div>
             <div className="flex flex-row gap-2 items-center">
               <Image src="/star.svg" alt="star" width={22} height={22} />
-              <p>{feedback?.totalScore || "___"}/100</p>
+              <p>{feedback?.totalScore || "---"}/100</p>
             </div>
           </div>
           <p className="line-clamp-2 mt-5">
